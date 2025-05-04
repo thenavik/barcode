@@ -40,13 +40,27 @@
     .error {
       color: red;
     }
+    .controls {
+      margin: 20px 0;
+    }
+    select {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 4px;
+      margin-right: 10px;
+    }
   </style>
 </head>
 <body>
   <h1>Сканер штрих-кодов</h1>
+  <div class="controls">
+    <select id="cameraSelect">
+      <option value="">Выберите камеру...</option>
+    </select>
+    <button id="retryButton" onclick="startScanning()">Начать сканирование</button>
+  </div>
   <video id="video" width="600" height="400"></video>
   <p id="result">Инициализация камеры...</p>
-  <button id="retryButton" onclick="startScanning()">Повторить</button>
   <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
   <script src="renderer.js"></script>
 </body>
