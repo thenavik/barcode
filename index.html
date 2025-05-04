@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Сканер штрих-кодов</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+    #video {
+      max-width: 100%;
+      border: 2px solid #333;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    #result {
+      margin: 20px auto;
+      padding: 15px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      max-width: 600px;
+      min-height: 50px;
+      white-space: pre-line;
+    }
+    #retryButton {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+    }
+    #retryButton:hover {
+      background-color: #45a049;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Сканер штрих-кодов</h1>
+  <video id="video" width="600" height="400"></video>
+  <p id="result">Инициализация камеры...</p>
+  <button id="retryButton" onclick="startScanning()">Повторить</button>
+  <script src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

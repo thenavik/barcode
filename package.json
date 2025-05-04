@@ -1,0 +1,16 @@
+{
+  "name": "barcode-scanner",
+  "version": "1.0.0",
+  "description": "Приложение для сканирования штрих-кодов",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1"
+  }
+}
