@@ -1,9 +1,26 @@
 const videoElement = document.getElementById('video');
 const resultElement = document.getElementById('result');
 const cameraSelect = document.getElementById('cameraSelect');
+const formatSelect = document.getElementById('formatSelect');
+const formatInfo = document.getElementById('formatInfo');
 
 let codeReader = null;
 let currentStream = null;
+
+// Словарь форматов штрих-кодов
+const formatMap = {
+    'all': 'Все форматы',
+    'qr': 'QR Code',
+    'ean13': 'EAN-13 (товарные коды)',
+    'ean8': 'EAN-8 (товарные коды)',
+    'upca': 'UPC-A (товарные коды)',
+    'upce': 'UPC-E (товарные коды)',
+    'code128': 'Code 128 (универсальный)',
+    'code39': 'Code 39 (буквенно-цифровой)',
+    'code93': 'Code 93 (буквенно-цифровой)',
+    'itf': 'ITF (межстрочный)',
+    'codabar': 'Codabar (цифровой)'
+};
 
 // Функция для обновления списка камер
 async function updateCameraList() {
@@ -40,6 +57,36 @@ function stopCurrentStream() {
     }
 }
 
+// Получение форматов для сканирования
+function getSelectedFormats() {
+    const selectedFormat = formatSelect.value;
+    if (selectedFormat === 'all') {
+        return null; // null означает все форматы
+    }
+    
+    const { BarcodeFormat } = window.ZXing;
+    const formatMap = {
+        'qr': BarcodeFormat.QR_CODE,
+        'ean13': BarcodeFormat.EAN_13,
+        'ean8': BarcodeFormat.EAN_8,
+        'upca': BarcodeFormat.UPC_A,
+        'upce': BarcodeFormat.UPC_E,
+        'code128': BarcodeFormat.CODE_128,
+        'code39': BarcodeFormat.CODE_39,
+        'code93': BarcodeFormat.CODE_93,
+        'itf': BarcodeFormat.ITF,
+        'codabar': BarcodeFormat.CODABAR
+    };
+    
+    return [formatMap[selectedFormat]];
+}
+
+// Обновление информации о формате
+function updateFormatInfo() {
+    const selectedFormat = formatSelect.value;
+    formatInfo.textContent = `Выбран формат: ${formatMap[selectedFormat]}`;
+}
+
 async function startScanning() {
     try {
         stopCurrentStream();
@@ -53,6 +100,14 @@ async function startScanning() {
         // Инициализация ZXing
         const { BrowserMultiFormatReader } = window.ZXing;
         codeReader = new BrowserMultiFormatReader();
+        
+        // Установка форматов для сканирования
+        const formats = getSelectedFormats();
+        if (formats) {
+            codeReader.setHints({
+                formats: formats
+            });
+        }
         
         // Получаем поток с выбранной камеры
         currentStream = await navigator.mediaDevices.getUserMedia({
@@ -68,8 +123,9 @@ async function startScanning() {
 
         await codeReader.decodeFromVideoDevice(selectedDeviceId, videoElement, (result, err) => {
             if (result) {
-                resultElement.textContent = `Результат: ${result.text}`;
-                console.log('Сканировано:', result.text);
+                const format = result.getBarcodeFormat();
+                resultElement.textContent = `Формат: ${format}\nРезультат: ${result.text}`;
+                console.log('Сканировано:', result.text, 'Формат:', format);
             }
             if (err && !(err instanceof window.ZXing.NotFoundException)) {
                 console.error('Ошибка сканирования:', err);
@@ -88,5 +144,11 @@ cameraSelect.addEventListener('change', () => {
     resultElement.textContent = 'Выберите камеру и нажмите "Начать сканирование"';
 });
 
-// Запускаем обновление списка камер при загрузке страницы
-window.addEventListener('load', updateCameraList);
+// Обработчик изменения формата
+formatSelect.addEventListener('change', updateFormatInfo);
+
+// Запускаем обновление списка камер и информации о формате при загрузке страницы
+window.addEventListener('load', () => {
+    updateCameraList();
+    updateFormatInfo();
+});

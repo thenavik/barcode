@@ -42,22 +42,52 @@
     }
     .controls {
       margin: 20px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .select-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
     }
     select {
       padding: 8px;
       font-size: 16px;
       border-radius: 4px;
-      margin-right: 10px;
+      min-width: 200px;
+    }
+    .format-info {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #666;
     }
   </style>
 </head>
 <body>
   <h1>Сканер штрих-кодов</h1>
   <div class="controls">
-    <select id="cameraSelect">
-      <option value="">Выберите камеру...</option>
-    </select>
+    <div class="select-group">
+      <select id="cameraSelect">
+        <option value="">Выберите камеру...</option>
+      </select>
+      <select id="formatSelect">
+        <option value="all">Все форматы</option>
+        <option value="qr">QR Code</option>
+        <option value="ean13">EAN-13</option>
+        <option value="ean8">EAN-8</option>
+        <option value="upca">UPC-A</option>
+        <option value="upce">UPC-E</option>
+        <option value="code128">Code 128</option>
+        <option value="code39">Code 39</option>
+        <option value="code93">Code 93</option>
+        <option value="itf">ITF</option>
+        <option value="codabar">Codabar</option>
+      </select>
+    </div>
     <button id="retryButton" onclick="startScanning()">Начать сканирование</button>
+    <div class="format-info" id="formatInfo"></div>
   </div>
   <video id="video" width="600" height="400"></video>
   <p id="result">Инициализация камеры...</p>
